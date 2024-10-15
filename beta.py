@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from translator import translator
+from translator_parent import translator
 import uvicorn
 from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
