@@ -1,42 +1,39 @@
-import queue
-import threading
-
 from fastapi import FastAPI
-from translator_parent import translator
+from deep_translator import GoogleTranslator
 import uvicorn
 from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
 import logging
 from logging.handlers import RotatingFileHandler
-from lang_list import langs
-from concurrent.futures import ThreadPoolExecutor
-import concurrent.futures
-from fastapi.middleware.cors import CORSMiddleware
 
 logging.basicConfig(
-    handlers=[RotatingFileHandler("webserver.log", maxBytes=5_000_000, backupCount=5)],
+    handlers=[RotatingFileHandler("translator.log", maxBytes=5_000_000, backupCount=5)],
     encoding="utf-8",
     level=logging.INFO,
     format="%(asctime)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+lang_mapping = {
+    "rus_Cyrl": "ru",
+    "uzn_Latn": "uz",
+    "nld_Latn": "nl",
+    "fra_Latn": "fr",
+    "kor_Hang": "ko",
+    "ita_Latn": "it",
+    "kaz_Cyrl": "kk",
+    "eng_Latn": "en",
+    "zho_Hans": "zh-CN",
+    "arb_Arab": "ar",
+    "tur_Latn": "tr",
+    "deu_Latn": "de",
+    "spa_Latn": "es",
+}
+langs = list(lang_mapping.keys())
 
 app = FastAPI()
 
-translator = translator()
-
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Разрешить все домены (или укажите конкретные домены)
-    allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все методы
-    allow_headers=["*"],  # Разрешить все заголовки
-)
-
   ### DATA MODEL ###
-
 
 class Request(BaseModel):
     src_lang: str
@@ -54,33 +51,24 @@ async def home():
 async def translate(request: Request):
     logging.info(f"Получен request: {request}\n")
 
+    src = request.src_lang
+    text = request.input_text
+    google_src = lang_mapping.get(src)
+
+    if not google_src:
+        return JSONResponse(content={"error": "Недопустимый исходный язык."}, status_code=400)
+
     translations = {}
-    threads = []
-    result_queue = queue.Queue()
 
-    def translate_task(tgt_lang):
-        meta = {
-            "src_lang": request.src_lang,
-            "tgt_lang": tgt_lang,
-            "input_text": request.input_text,
-        }
-        print(meta)
-
-        result = translator.translate(**meta)
-        result_queue.put((tgt_lang, result))
-
-    for lang in langs:
-        if lang != request.src_lang:
-            thread = threading.Thread(target=translate_task, args=(lang,))
-            threads.append(thread)
-            thread.start()
-
-    for thread in threads:
-        thread.join()
-
-    while not result_queue.empty():
-        tgt_lang, result = result_queue.get()
-        translations[tgt_lang] = result
+    for tgt in langs:
+        if tgt != src:
+            google_tgt = lang_mapping[tgt]
+            try:
+                result = GoogleTranslator(source=google_src, target=google_tgt).translate(text)
+                translations[tgt] = result
+            except Exception as e:
+                logging.error(f"Ошибка при переводе на {google_tgt}: {e}")
+                translations[tgt] = "Ошибка перевода"
 
     result_json = {
         "translations": translations,
