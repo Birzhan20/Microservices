@@ -7,7 +7,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 logging.basicConfig(
-    handlers=[RotatingFileHandler("translator.log", maxBytes=5_000_000, backupCount=5)],
+    handlers=[RotatingFileHandler("sigma.log", maxBytes=5_000_000, backupCount=5)],
     encoding="utf-8",
     level=logging.INFO,
     format="%(asctime)s - %(message)s",
@@ -49,14 +49,13 @@ async def home():
 
 @app.post("/translate", tags=["translate"])
 async def translate(request: Request):
-    logging.info(f"Получен request: {request}\n")
-
+    logging.info(f"Got request: {request}\n")
     src = request.src_lang
     text = request.input_text
     google_src = lang_mapping.get(src)
 
     if not google_src:
-        return JSONResponse(content={"error": "Недопустимый исходный язык."}, status_code=400)
+        return JSONResponse(content={"error": "Unacceptable foreign language."}, status_code=400)
 
     translations = {}
 
@@ -67,13 +66,13 @@ async def translate(request: Request):
                 result = GoogleTranslator(source=google_src, target=google_tgt).translate(text)
                 translations[tgt] = result
             except Exception as e:
-                logging.error(f"Ошибка при переводе на {google_tgt}: {e}")
-                translations[tgt] = "Ошибка перевода"
+                logging.error(f"Error when translating into {google_tgt}: {e}")
+                translations[tgt] = "Translating error"
 
     result_json = {
         "translations": translations,
     }
-    logging.debug(f"Вернулся перевод: {result_json}\n")
+    logging.debug(f"The translation has returned: {result_json}\n")
 
     return JSONResponse(content=result_json)
 
