@@ -30,7 +30,9 @@ async def generate_meta_description(request_body: Txt):
         )
         print(response)
 
-        return JSONResponse(content={"meta": response})
+        meta_res = response.strip('"')
+
+        return JSONResponse(content={"meta": meta_res})
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
