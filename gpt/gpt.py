@@ -25,7 +25,7 @@ async def generate_meta_description(request_body: Txt):
     try:
         response = g4f.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": f"Создай уникальный мета-текст до 200 символов: {text}"}],
+            messages=[{"role": "user", "content": f"Создай уникальный мета-текст до 200 символов на русском, без смайликов, в официально деловом стиле: {text}"}],
             stream=False,
         )
         print(response)
