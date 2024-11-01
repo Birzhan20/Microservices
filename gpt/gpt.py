@@ -25,7 +25,7 @@ async def generate_meta_description(request_body: Txt):
     try:
         response = g4f.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": f"РЎРѕР·РґР°Р№ СѓРЅРёРєР°Р»СЊРЅС‹Р№ РјРµС‚Р°-С‚РµРєСЃС‚ РґРѕ 200 СЃРёРјРІРѕР»РѕРІ РЅР° СЂСѓСЃСЃРєРѕРј, Р±РµР· СЃРјР°Р№Р»РёРєРѕРІ, РІ РѕС„РёС†РёР°Р»СЊРЅРѕ РґРµР»РѕРІРѕРј СЃС‚РёР»Рµ: {text}"}],
+            messages=[{"role": "user", "content": f"Создай уникальный мета-текст до 200 символов на русском, без смайликов, в официально деловом стиле: {text}"}],
             stream=False,
         )
         print(response)
@@ -39,4 +39,4 @@ async def generate_meta_description(request_body: Txt):
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="127.0.0.1", port=8011)
+    uvicorn.run(app, host="127.0.0.1", port=8000)

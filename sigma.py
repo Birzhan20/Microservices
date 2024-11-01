@@ -33,7 +33,8 @@ langs = list(lang_mapping.keys())
 
 app = FastAPI()
 
-  ### DATA MODEL ###
+  ### DATA SCHEMA ###
+
 
 class Request(BaseModel):
     src_lang: str
@@ -48,10 +49,12 @@ async def home():
 
 
 @app.post("/translate", tags=["translate"])
-async def translate(request: Request):
+async def translate(request):
+    print(f"Got request: {request}")
     logging.info(f"Got request: {request}\n")
-    src = request.src_lang
-    text = request.input_text
+    body = await request.body
+    src = body.get('src_lang')
+    text = body.get('input_text')
     google_src = lang_mapping.get(src)
 
     if not google_src:
@@ -64,6 +67,7 @@ async def translate(request: Request):
             google_tgt = lang_mapping[tgt]
             try:
                 result = GoogleTranslator(source=google_src, target=google_tgt).translate(text)
+                print(result)
                 translations[tgt] = result
             except Exception as e:
                 logging.error(f"Error when translating into {google_tgt}: {e}")
@@ -72,7 +76,8 @@ async def translate(request: Request):
     result_json = {
         "translations": translations,
     }
-    logging.debug(f"The translation has returned: {result_json}\n")
+    print(f"The translation has returned: {result_json}")
+    logging.info(f"The translation has returned: {result_json}\n")
 
     return JSONResponse(content=result_json)
 
