@@ -14,7 +14,7 @@ class Txt(BaseModel):
     text: str | int
 
 
-@app.post("/phys/ceo")
+@app.post("/phys/seo")
 async def generate_meta_description(request_body: Txt):
     text = request_body.text
     print(text)
@@ -40,7 +40,7 @@ async def generate_meta_description(request_body: Txt):
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
 
-@app.post("/phys/meta")
+@app.post("/phys/index")
 async def generate_meta_description(request_body: Txt):
     text = request_body.text
     print(text)
