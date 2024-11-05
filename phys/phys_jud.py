@@ -20,7 +20,7 @@ redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 producer = Producer(kafka_config)
 consumer = Consumer(kafka_config)
 
-consumer.subscribe(['phys_seo', 'jud_seo', 'jud_index', 'phys_index'])
+consumer.subscribe(['phys-seo', 'jud-seo', 'jud-index', 'phys-index'])
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -31,13 +31,13 @@ def process_message(text: str, category: str) -> str:
     Функция для генерации мета-описания с помощью модели GPT.
     """
     try:
-        if category == 'phys_seo':
+        if category == 'phys-seo':
             prompt = f"Напиши уникальный seo-текст не более 500 слов о возможности на международной платформе Mytrade.kz смотреть объявления о продаваемых товарах, услугах, недвижимости, автомобилей и т.д. на странницах частных лиц: {text}"
-        elif category == 'phys_index':
+        elif category == 'phys-index':
             prompt = f"Напиши уникальный индексируемый мета-текст для текста: «{text}». При генерации ответа не используй ID пользователя."
-        elif category == 'jud_seo':
+        elif category == 'jud-seo':
             prompt = f"Напиши уникальный seo-текст не более 500 слов о возможности найти товары и услуги от магазинов и компаний со всего мира на Mytrade.kz: {text}"
-        elif category == 'jud_index':
+        elif category == 'jud-index':
             prompt = f"Напиши уникальный индексируемый мета-текст для текста: «{text}». Без использования ID пользователя."
         else:
             return "Неизвестная категория."
