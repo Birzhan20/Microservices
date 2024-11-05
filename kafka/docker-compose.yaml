@@ -24,7 +24,7 @@ services:
       - kafka-network
 
   translator:
-    image: translaor
+    image: translator
     depends_on:
       - kafka
     networks:
