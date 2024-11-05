@@ -4,7 +4,7 @@ from logging.handlers import RotatingFileHandler
 import redis
 from deep_translator import GoogleTranslator
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
-from translator.langs import lang_mapping
+from langs import lang_mapping
 
 logging.basicConfig(
     handlers=[RotatingFileHandler("sigma.log", maxBytes=5_000_000, backupCount=5)],
