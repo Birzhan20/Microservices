@@ -10,4 +10,4 @@ ADD . .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "jud_gpt:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
+CMD ["uvicorn", "d_s_services_categories:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]

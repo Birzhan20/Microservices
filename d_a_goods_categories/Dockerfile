@@ -10,4 +10,4 @@ ADD . .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "d_a_goods:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
+CMD ["uvicorn", "d_a_goods_categories:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]

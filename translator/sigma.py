@@ -1,7 +1,6 @@
 import json
 import logging
 from logging.handlers import RotatingFileHandler
-
 import redis
 from deep_translator import GoogleTranslator
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
@@ -21,6 +20,7 @@ kafka_config = {
     'bootstrap.servers': 'kafka:9093',
     'group.id': 'translator-consumer',
     'auto.offset.reset': 'earliest',
+    'enable.auto.commit': False,
 }
 
 # Redis client to store processed message IDs
@@ -29,7 +29,14 @@ redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 producer = Producer(kafka_config)
 consumer = Consumer(kafka_config)
 
-consumer.subscribe(['translation-request'])
+consumer.subscribe(['translation'])
+
+
+def delivery_report(err, msg):
+    if err:
+        logging.error(f"Delivery failed for message: {err}")
+    else:
+        logging.info(f"Message delivered to {msg.topic()} [{msg.partition()}] at offset {msg.offset()}")
 
 
 def send_translation_result(translations):
@@ -37,7 +44,11 @@ def send_translation_result(translations):
         result_message = {
             'translations': translations,
         }
-        producer.produce('translation-result', value=json.dumps(result_message))
+        producer.produce(
+            'translation-result',
+            value=json.dumps(result_message),
+            callback=delivery_report
+        )
         producer.flush()  # Ensure message is sent before continuing
         logging.info("Translation result sent to Kafka.")
     except Exception as e:
@@ -86,10 +97,13 @@ def process_translation_request(message):
     except Exception as e:
         logging.error(f"Error storing message ID {message_id} in Redis: {e}")
 
+    # Commit offset only after processing and sending the result
+    consumer.commit()
+
 
 def run_kafka_consumer():
-    while True:
-        try:
+    try:
+        while True:
             msg = consumer.poll(timeout=1.0)
             if msg is None:
                 continue
@@ -101,14 +115,12 @@ def run_kafka_consumer():
             else:
                 message = json.loads(msg.value().decode('utf-8'))
                 process_translation_request(message)
-        except KeyboardInterrupt:
-            logging.info("Kafka consumer interrupted by user.")
-            break
-        except Exception as e:
-            logging.error(f"Error during Kafka consumption: {e}")
-            break
-        finally:
-            consumer.close()
+    except KeyboardInterrupt:
+        logging.info("Kafka consumer interrupted by user.")
+    except Exception as e:
+        logging.error(f"Error during Kafka consumption: {e}")
+    finally:
+        consumer.close()
 
 
 if __name__ == "__main__":
