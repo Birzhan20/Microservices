@@ -17,7 +17,7 @@ logging.basicConfig(
 langs = list(lang_mapping.keys())
 
 kafka_config = {
-    'bootstrap.servers': 'kafka:9093',
+    'bootstrap.servers': '0.0.0.0:9093',
     'group.id': 'translator-consumer',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,

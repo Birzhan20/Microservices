@@ -8,7 +8,7 @@ import logging
 nest_asyncio.apply()
 
 kafka_config = {
-    'bootstrap.servers': 'kafka:9093',  # Адрес вашего брокера Kafka
+    'bootstrap.servers': '0.0.0.0:9093',  # Адрес вашего брокера Kafka
     'group.id': 'translator-consumer',  # ID группы потребителей
     'auto.offset.reset': 'earliest',  # Начинать с самого начала
     'enable.auto.commit': False,  # Отключаем авто-коммит, чтобы вручную подтвердить обработку
