@@ -1,0 +1,15 @@
+lang_mapping = {
+    "rus_Cyrl": "ru",
+    "uzn_Latn": "uz",
+    "nld_Latn": "nl",
+    "fra_Latn": "fr",
+    "kor_Hang": "ko",
+    "ita_Latn": "it",
+    "kaz_Cyrl": "kk",
+    "eng_Latn": "en",
+    "zho_Hans": "zh-CN",
+    "arb_Arab": "ar",
+    "tur_Latn": "tr",
+    "deu_Latn": "de",
+    "spa_Latn": "es",
+}
