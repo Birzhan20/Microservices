@@ -37,40 +37,40 @@ services:
     networks:
       - kafka-network
 
-#  goods_category:
-#    image: goods_category
-#    depends_on:
-#      - kafka
-#    networks:
-#      - kafka-network
-#
-#  d_a_goods_categories:
-#    image: d_a_goods_categories
-#    depends_on:
-#      - kafka
-#    networks:
-#      - kafka-network
-#
-#  d_g_goods_categories:
-#    image: d_g_goods_categories
-#    depends_on:
-#      - kafka
-#    networks:
-#      - kafka-network
-#
-#  d_r_goods_categories:
-#    image: d_r_goods_categories
-#    depends_on:
-#      - kafka
-#    networks:
-#      - kafka-network
-#
-#  d_s_goods_categories:
-#    image: d_s_goods_categories
-#    depends_on:
-#      - kafka
-#    networks:
-#      - kafka-network
+  goods_category:
+    image: goods_category
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
+
+  d_a_goods_categories:
+    image: d_a_goods_categories
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
+
+  d_g_goods_categories:
+    image: d_g_goods_categories
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
+
+  d_r_goods_categories:
+    image: d_r_goods_categories
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
+
+  d_s_goods_categories:
+    image: d_s_goods_categories
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
 
 networks:
   kafka-network:
