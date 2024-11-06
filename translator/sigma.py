@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 import json
 import logging
 import uuid
@@ -22,7 +23,7 @@ kafka_config = {
     'group.id': 'translator-consumer',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
-    'acks': 'all',  # Ждем подтверждения от всех брокеров
+    'acks': 'all',  # Р–РґРµРј РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ РѕС‚ РІСЃРµС… Р±СЂРѕРєРµСЂРѕРІ
 }
 
 # Redis client to store processed message IDs

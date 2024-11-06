@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 import uuid
 import nest_asyncio
 import g4f
