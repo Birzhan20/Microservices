@@ -65,8 +65,8 @@ services:
     networks:
       - kafka-network
 
-  d_s_goods_categories:
-    image: d_s_goods_categories
+  d_s_services_categories:
+    image: d_s_services_categories
     depends_on:
       - kafka
     networks:
