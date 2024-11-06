@@ -1,3 +1,4 @@
+import uuid
 import nest_asyncio
 import g4f
 import redis
@@ -7,16 +8,19 @@ import logging
 
 nest_asyncio.apply()
 
+# Конфигурация Kafka
 kafka_config = {
     'bootstrap.servers': 'kafka:9093',  # Адрес вашего брокера Kafka
     'group.id': 'translator-consumer',  # ID группы потребителей
     'auto.offset.reset': 'earliest',  # Начинать с самого начала
     'enable.auto.commit': False,  # Отключаем авто-коммит, чтобы вручную подтвердить обработку
+    'acks': 'all',  # Ждем подтверждения от всех брокеров
 }
 
 # Redis клиент (если нужно хранить processed message ID)
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
+# Создание экземпляров Producer и Consumer для Kafka
 producer = Producer(kafka_config)
 consumer = Consumer(kafka_config)
 
@@ -32,7 +36,7 @@ def process_message(text: str, category: str) -> str:
     """
     try:
         if category == 'phys-seo':
-            prompt = f"Напиши уникальный seo-текст не более 500 слов о возможности на международной платформе Mytrade.kz смотреть объявления о продаваемых товарах, услугах, недвижимости, автомобилей и т.д. на странницах частных лиц: {text}"
+            prompt = f"Напиши уникальный seo-текст не более 500 слов о возможности на международной платформе Mytrade.kz смотреть объявления о продаваемых товарах, услугах, недвижимости, автомобилей и т.д. на страницах частных лиц: {text}"
         elif category == 'phys-index':
             prompt = f"Напиши уникальный индексируемый мета-текст для текста: «{text}». При генерации ответа не используй ID пользователя."
         elif category == 'jud-seo':
@@ -63,11 +67,17 @@ def handle_message(message):
         message_value = message.value().decode('utf-8')
         data = json.loads(message_value)
 
+        message_id = data.get('message_id')  # Уникальный идентификатор сообщения
         text = data.get('text', '')
         category = data.get('category', '')
 
-        if not text:
-            logger.warning(f"Сообщение не содержит текста. Игнорируем сообщение.")
+        if not text or not message_id:
+            logger.warning(f"Сообщение не содержит текста или message_id. Игнорируем.")
+            return
+
+        # Проверяем, обрабатывалось ли это сообщение ранее
+        if redis_client.exists(message_id):
+            logger.info(f"Сообщение {message_id} уже обработано. Пропускаем.")
             return
 
         # Обрабатываем текст
@@ -75,10 +85,13 @@ def handle_message(message):
 
         # Отправляем результат обратно в Kafka
         result = {
+            'message_id': str(uuid.uuid4()),  # Новый уникальный ID для возвращаемого сообщения
             'meta': meta_description,
             'category': category
         }
-        producer.produce('result_topic', json.dumps(result).encode('utf-8'))
+
+        # Отправка результата в другую тему Kafka
+        producer.produce('phys-jud', json.dumps(result).encode('utf-8'))
         producer.flush()  # Ждем, пока сообщение не будет отправлено
 
         # Подтверждаем, что сообщение обработано
@@ -124,4 +137,4 @@ if __name__ == '__main__':
     except Exception as e:
         logger.error(f"Ошибка: {str(e)}")
     finally:
-        consumer.close()
+        consumer.close()  # Закрываем consumer при завершении работы
