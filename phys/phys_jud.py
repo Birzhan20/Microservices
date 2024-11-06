@@ -11,7 +11,7 @@ nest_asyncio.apply()
 
 # Конфигурация Kafka
 kafka_config = {
-    'bootstrap.servers': 'kafka:9093',  # Адрес вашего брокера Kafka
+    'bootstrap.servers': 'kafka:9092',  # Адрес вашего брокера Kafka
     'group.id': 'phys_jud',  # ID группы потребителей
     'auto.offset.reset': 'earliest',  # Начинать с самого начала
     'enable.auto.commit': False,  # Отключаем авто-коммит, чтобы вручную подтвердить обработку

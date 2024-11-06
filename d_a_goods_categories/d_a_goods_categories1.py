@@ -10,7 +10,7 @@ import logging
 nest_asyncio.apply()
 
 kafka_config = {
-    'bootstrap.servers': 'kafka:9093',
+    'bootstrap.servers': 'kafka:9092',
     'group.id': 'd_a_goods_categories',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
