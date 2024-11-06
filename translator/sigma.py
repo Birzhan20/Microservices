@@ -1,5 +1,6 @@
 import json
 import logging
+import uuid
 from logging.handlers import RotatingFileHandler
 import redis
 from deep_translator import GoogleTranslator
@@ -21,6 +22,7 @@ kafka_config = {
     'group.id': 'translator-consumer',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
+    'acks': 'all',  # ∆дем подтверждени€ от всех брокеров
 }
 
 # Redis client to store processed message IDs
@@ -42,10 +44,11 @@ def delivery_report(err, msg):
 def send_translation_result(translations):
     try:
         result_message = {
+            'message_id': str(uuid.uuid4()),
             'translations': translations,
         }
         producer.produce(
-            'translation-result',
+            'translation-res',
             value=json.dumps(result_message),
             callback=delivery_report
         )
