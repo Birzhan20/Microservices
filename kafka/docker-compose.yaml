@@ -25,6 +25,8 @@ services:
 
   translator:
     image: translator
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9093
     depends_on:
       - kafka
     networks:
@@ -32,6 +34,8 @@ services:
 
   phys_jud:
     image: phys_jud
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9093
     depends_on:
       - kafka
     networks:
@@ -39,6 +43,8 @@ services:
 
   goods_category:
     image: goods_category
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9093
     depends_on:
       - kafka
     networks:
@@ -46,6 +52,8 @@ services:
 
   d_a_goods_categories:
     image: d_a_goods_categories
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9093
     depends_on:
       - kafka
     networks:
@@ -53,6 +61,8 @@ services:
 
   d_g_goods_categories:
     image: d_g_goods_categories
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9093
     depends_on:
       - kafka
     networks:
@@ -60,6 +70,8 @@ services:
 
   d_r_goods_categories:
     image: d_r_goods_categories
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9093
     depends_on:
       - kafka
     networks:
@@ -67,6 +79,8 @@ services:
 
   d_s_services_categories:
     image: d_s_services_categories
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9093
     depends_on:
       - kafka
     networks:
