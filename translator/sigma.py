@@ -20,7 +20,7 @@ langs = list(lang_mapping.keys())
 
 kafka_config = {
     'bootstrap.servers': 'kafka:9092',
-    'group.id': 'translator-consumer',
+    'group.id': 'translator',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
     'acks': 'all',  # Ждем подтверждения от всех брокеров

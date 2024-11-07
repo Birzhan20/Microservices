@@ -9,23 +9,23 @@ services:
       - kafka-network
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    build:
+      context: ./kafka
     ports:
       - "9092:9092"
+    volumes:
+      - ./kafka/config:/etc/kafka/config
+      - kafka_data:/var/lib/kafka/data
     environment:
-      KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
     networks:
       - kafka-network
 
   translator:
-    image: translator
+    build:
+      context: ./translator
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
@@ -34,7 +34,8 @@ services:
       - kafka-network
 
   phys_jud:
-    image: phys_jud
+    build:
+      context: ./phys_jud
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
@@ -43,7 +44,8 @@ services:
       - kafka-network
 
   goods_category:
-    image: goods_category
+    build:
+      context: ./goods_category
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
@@ -52,7 +54,8 @@ services:
       - kafka-network
 
   d_a_goods_categories:
-    image: d_a_goods_categories
+    build:
+      context: ./d_a_goods_categories
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
@@ -61,7 +64,8 @@ services:
       - kafka-network
 
   d_g_goods_categories:
-    image: d_g_goods_categories
+    build:
+      context: ./d_g_goods_categories
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
@@ -70,7 +74,8 @@ services:
       - kafka-network
 
   d_r_goods_categories:
-    image: d_r_goods_categories
+    build:
+      context: ./d_r_goods_categories
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
@@ -79,7 +84,8 @@ services:
       - kafka-network
 
   d_s_services_categories:
-    image: d_s_services_categories
+    build:
+      context: ./d_s_services_categories
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:

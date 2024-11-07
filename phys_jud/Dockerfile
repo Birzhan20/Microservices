@@ -13,4 +13,4 @@ ADD . .
 
 EXPOSE 8000
 
-CMD ["python", "phys_jud.py"]
+CMD ["sh", "-c", "sleep 10 && python phys_jud.py"]

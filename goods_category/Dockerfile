@@ -13,4 +13,4 @@ ADD . .
 
 EXPOSE 8000
 
-CMD ["python", "goods_category1.py"]
+CMD ["sh", "-c", "sleep 10 && python goods_category1.py"]
