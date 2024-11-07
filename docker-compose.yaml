@@ -96,3 +96,6 @@ services:
 networks:
   kafka-network:
     driver: bridge
+
+volumes:
+  kafka_data: { }
