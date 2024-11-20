@@ -7,7 +7,7 @@ WORKDIR /etc/kafka
 # Скопируем конфигурационный файл server.properties
 COPY config/server.properties /etc/kafka/server.properties
 
-RUN apt-get update && apt-get install -y python3 python3-pip
+RUN apk add --no-cache python3 py3-pip
 
 # Указываем путь для хранения данных Kafka
 VOLUME ["/var/lib/kafka/data"]
