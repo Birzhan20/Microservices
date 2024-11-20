@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from kafka import KafkaAdminClient
 from kafka.admin import NewTopic
 import time

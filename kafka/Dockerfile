@@ -1,22 +1,20 @@
 FROM confluentinc/cp-kafka:latest
 
-# Установим рабочую директорию
 WORKDIR /etc/kafka
 
 USER root
 
-# Установим Python Red Hat Enterprise Linux 8.10 (RHEL 8.10)
-RUN dnf install -y python3 python3-pip && \
-    pip install importlib-metadata pkg_resources confluent-docker-utils==0.0.82
+# Установим необходимые зависимости Python
+RUN pip install --no-cache-dir --upgrade requests kafka-python
 
-# Скопируем конфигурационный файл server.properties
+# Копируем конфигурационный файл server.properties
 COPY config/server.properties /etc/kafka/server.properties
 
 # Указываем путь для хранения данных Kafka
 VOLUME ["/var/lib/kafka/data"]
 
-# Копируем Python-скрипт для работы с темами (если требуется)
+# Копируем Python-скрипт для работы с темами
 COPY topics.py /etc/kafka/topics.py
 
 # Запускаем Kafka и затем Python-скрипт
-CMD ["sh", "-c", "/etc/confluent/docker/run && kafka-server-start /etc/kafka/server.properties & sleep 5 && python3 /etc/kafka/topics.py"]
+CMD ["sh", "-c", "/etc/confluent/docker/run && kafka-server-start /etc/kafka/server.properties & while ! nc -z localhost 9092; do sleep 1; done; python3 /etc/kafka/topics.py"]

@@ -1,0 +1,5 @@
+kafka-python==2.0.2
+confluent-docker-utils==0.0.82
+setuptools==75.1.0
+importlib-metadata==8.5.0
+zipp==3.21.0
