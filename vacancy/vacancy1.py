@@ -9,18 +9,22 @@ import logging
 
 nest_asyncio.apply()
 
-kafka_config = {
+consumer_config = {
     'bootstrap.servers': 'kafka:9092',
-    'group.id': 'd_a_goods_categories',
+    'group.id': 'vacancy',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
-    'acks': 'all'
+}
+
+producer_config = {
+    'bootstrap.servers': 'kafka:9092',
+    'acks': 'all',
 }
 
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
-producer = Producer(kafka_config)
-consumer = Consumer(kafka_config)
+producer = Producer(producer_config)
+consumer = Consumer(consumer_config)
 
 consumer.subscribe(['vacancy-index', 'vacancy-seo', 'vacancy-resume-index', 'vacancy-resume-seo'])
 
