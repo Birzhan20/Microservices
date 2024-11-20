@@ -2,7 +2,6 @@ from kafka import KafkaAdminClient
 from kafka.admin import NewTopic
 import time
 
-# Список топиков
 topics_list = [
     "category-index", "category-seo", "goods-category-result", "goods-index", "goods-seo",
     "d-a-categories-index", "d-a-categories-seo", "d-a-goods-index", "d-a-goods-seo", "d-a-result",
@@ -14,14 +13,12 @@ topics_list = [
     "translation", "translation-res",
 ]
 
+
 def create_topics(bootstrap_servers, topics):
-    # Создаем клиента администратора
     admin_client = KafkaAdminClient(bootstrap_servers=bootstrap_servers)
 
-    # Составляем список новых топиков
     new_topics = [NewTopic(name=topic, num_partitions=3, replication_factor=2) for topic in topics]
 
-    # Создаем топики
     try:
         admin_client.create_topics(new_topics=new_topics, validate_only=False)
         print("Topics created successfully.")
@@ -30,10 +27,8 @@ def create_topics(bootstrap_servers, topics):
     finally:
         admin_client.close()
 
+
 if __name__ == "__main__":
-    # Задержка, чтобы Kafka успел полностью запуститься
-    print("Waiting for Kafka to be ready...")
     time.sleep(10)
 
-    # Создание топиков
     create_topics('kafka:9092', topics_list)

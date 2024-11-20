@@ -6,7 +6,8 @@ WORKDIR /etc/kafka
 USER root
 
 # Установим Python Red Hat Enterprise Linux 8.10 (RHEL 8.10)
-RUN dnf install -y python3 python3-pip
+RUN dnf install -y python3 python3-pip && \
+    pip install importlib-metadata pkg_resources confluent-docker-utils==0.0.82
 
 # Скопируем конфигурационный файл server.properties
 COPY config/server.properties /etc/kafka/server.properties
