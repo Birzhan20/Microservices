@@ -3,6 +3,8 @@ FROM confluentinc/cp-kafka:latest
 # Установим рабочую директорию
 WORKDIR /etc/kafka
 
+USER root
+
 # Установим Python Red Hat Enterprise Linux 8.10 (RHEL 8.10)
 RUN dnf install -y python3 python3-pip
 
