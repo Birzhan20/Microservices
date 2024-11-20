@@ -76,6 +76,7 @@ def handle_message(message):
             'message_id': str(uuid.uuid4()),
             'meta': meta_description,
             'category': category
+
         }
 
         producer.produce('d-r-result', json.dumps(result).encode('utf-8'))

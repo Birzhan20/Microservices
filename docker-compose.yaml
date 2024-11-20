@@ -93,6 +93,16 @@ services:
     networks:
       - kafka-network
 
+  vacancy:
+    build:
+      context: ./vacancy
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
+
 networks:
   kafka-network:
     driver: bridge
