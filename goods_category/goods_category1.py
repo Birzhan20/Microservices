@@ -9,18 +9,25 @@ import logging
 
 nest_asyncio.apply()
 
-kafka_config = {
+
+consumer_config = {
     'bootstrap.servers': 'kafka:9092',
     'group.id': 'goods_category',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
-    'acks': 'all'
 }
 
+producer_config = {
+    'bootstrap.servers': 'kafka:9092',
+    'acks': 'all',
+}
+
+# Redis клиент (если нужно хранить processed message ID)
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
-producer = Producer(kafka_config)
-consumer = Consumer(kafka_config)
+# Создание экземпляров Producer и Consumer для Kafka
+producer = Producer(producer_config)
+consumer = Consumer(consumer_config)
 
 consumer.subscribe(['goods-seo', 'goods-index', 'category-seo', 'category-index'])
 
@@ -78,7 +85,7 @@ def handle_message(message):
             'category': category
         }
 
-        producer.produce('goods-category', json.dumps(result).encode('utf-8'))
+        producer.produce('goods-category-result', json.dumps(result).encode('utf-8'))
         producer.flush()
 
         consumer.commit()

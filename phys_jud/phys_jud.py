@@ -9,12 +9,16 @@ import logging
 
 nest_asyncio.apply()
 
-# Конфигурация Kafka
-kafka_config = {
-    'bootstrap.servers': 'kafka:9092',  # Адрес вашего брокера Kafka
-    'group.id': 'phys_jud',  # ID группы потребителей
+
+consumer_config = {
+    'bootstrap.servers': 'kafka:9092',
+    'group.id': 'phys_jud',   # ID группы потребителей
     'auto.offset.reset': 'earliest',  # Начинать с самого начала
     'enable.auto.commit': False,  # Отключаем авто-коммит, чтобы вручную подтвердить обработку
+}
+
+producer_config = {
+    'bootstrap.servers': 'kafka:9092',
     'acks': 'all',  # Ждем подтверждения от всех брокеров
 }
 
@@ -22,8 +26,8 @@ kafka_config = {
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 # Создание экземпляров Producer и Consumer для Kafka
-producer = Producer(kafka_config)
-consumer = Consumer(kafka_config)
+producer = Producer(producer_config)
+consumer = Consumer(consumer_config)
 
 consumer.subscribe(['phys-seo', 'jud-seo', 'jud-index', 'phys-index'])
 
@@ -92,7 +96,7 @@ def handle_message(message):
         }
 
         # Отправка результата в другую тему Kafka
-        producer.produce('phys-jud', json.dumps(result).encode('utf-8'))
+        producer.produce('phys-jud-result', json.dumps(result).encode('utf-8'))
         producer.flush()  # Ждем, пока сообщение не будет отправлено
 
         # Подтверждаем, что сообщение обработано

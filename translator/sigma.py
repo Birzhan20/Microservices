@@ -18,19 +18,23 @@ logging.basicConfig(
 
 langs = list(lang_mapping.keys())
 
-kafka_config = {
+consumer_config = {
     'bootstrap.servers': 'kafka:9092',
     'group.id': 'translator',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
-    'acks': 'all',  # Ждем подтверждения от всех брокеров
+}
+
+producer_config = {
+    'bootstrap.servers': 'kafka:9092',
+    'acks': 'all',
 }
 
 # Redis client to store processed message IDs
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
-producer = Producer(kafka_config)
-consumer = Consumer(kafka_config)
+producer = Producer(producer_config)
+consumer = Consumer(consumer_config)
 
 consumer.subscribe(['translation'])
 
