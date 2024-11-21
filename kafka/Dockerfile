@@ -13,7 +13,7 @@ USER root
 
 # Обновляем pip и устанавливаем необходимые зависимости
 RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir importlib-metadata confluent-docker-utils
+RUN pip install --no-cache-dir importlib-metadata confluent-kafka
 
 # Устанавливаем все зависимости из requirements.txt
 COPY requirements.txt /etc/kafka/requirements.txt
