@@ -1,17 +1,27 @@
-# Используем официальный образ Python 3.9 на базе Red Hat UBI
-FROM registry.access.redhat.com/ubi8/python-39:latest
+FROM confluentinc/cp-kafka:latest
 
-# Рабочая директория
-WORKDIR /app
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
-# Устанавливаем pip и необходимые Python-библиотеки
+WORKDIR /etc/kafka
+
+USER root
+
+# Убедимся, что pip обновлен
 RUN pip install --no-cache-dir --upgrade pip
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Копируем конфигурационный файл Kafka и Python-скрипт
-COPY config/server.properties /app/config/server.properties
-COPY topics.py /app/topics.py
+# Установим все необходимые зависимости из requirements.txt
+COPY ../create_topics/requirements.txt /etc/kafka/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /etc/kafka/requirements.txt
 
-# Указываем команду для запуска скрипта
-CMD ["python3", "/app/topics.py"]
+# Копируем конфигурационный файл server.properties
+COPY config/server.properties /etc/kafka/server.properties
+
+# Указываем путь для хранения данных Kafka
+VOLUME ["/var/lib/kafka/data"]
+
+# Копируем Python-скрипт для работы с темами
+COPY ../create_topics/topics.py /etc/kafka/topics.py
+
+# Запускаем Kafka и затем Python-скрипт
+CMD ["sh", "-c", "/etc/confluent/docker/run && kafka-server-start /etc/kafka/server.properties & while ! nc -z localhost 9092"]
