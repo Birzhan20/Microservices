@@ -33,7 +33,7 @@ services:
     expose:
       - "9092"
     networks:
-      - kafka-net
+      - kafka-network
 
   create_topics:
     build:
