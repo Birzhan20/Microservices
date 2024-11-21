@@ -31,10 +31,17 @@ COPY topics.py /etc/kafka/topics.py
 # Устанавливаем утилиту для проверки порта (nc) и другие зависимости
 RUN yum -y install nc wget
 
+# Устанавливаем OpenJDK (необходим для работы Kafka)
+RUN yum -y install java-1.8.0-openjdk
+
 # Скачиваем и устанавливаем Kafka
 RUN wget https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz && \
     tar -xvzf kafka_2.13-2.8.0.tgz && \
     mv kafka_2.13-2.8.0 /opt/kafka
+
+# Настроим JAVA_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Добавляем утилиты Kafka в PATH
 ENV PATH="/opt/kafka/bin:${PATH}"
