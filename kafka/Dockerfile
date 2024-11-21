@@ -26,4 +26,4 @@ RUN wget https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz && \
     mv kafka_2.13-2.8.0 /opt/kafka
 
 # Запускаем Kafka и затем проверяем, доступен ли порт 9092
-CMD ["sh", "-c", "/opt/kafka/bin/kafka-server-start /etc/kafka/server.properties & while ! nc -z localhost 9092; do sleep 1; done; tail -f /dev/null"]
+CMD ["sh", "-c", "/opt/kafka/bin/kafka-server-start /etc/kafka/server.properties && while ! nc -z localhost 9092; do sleep 1; done; tail -f /dev/null"]
