@@ -9,6 +9,7 @@ USER root
 
 # Убедимся, что pip обновлен
 RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir importlib-metadata confluent-docker-utils==0.0.82
 
 # Установим все необходимые зависимости из requirements.txt
 COPY requirements.txt /etc/kafka/requirements.txt

@@ -3,6 +3,7 @@ from kafka import KafkaAdminClient
 from kafka.admin import NewTopic
 import time
 
+
 topics_list = [
     "category-index", "category-seo", "goods-category-result", "goods-index", "goods-seo",
     "d-a-categories-index", "d-a-categories-seo", "d-a-goods-index", "d-a-goods-seo", "d-a-result",
