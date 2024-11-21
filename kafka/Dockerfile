@@ -7,7 +7,10 @@ WORKDIR /etc/kafka
 
 USER root
 
-# Установим необходимые зависимости Python из файла requirements.txt
+# Убедимся, что pip обновлен
+RUN pip install --no-cache-dir --upgrade pip
+
+# Установим все необходимые зависимости из requirements.txt
 COPY requirements.txt /etc/kafka/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /etc/kafka/requirements.txt
 
