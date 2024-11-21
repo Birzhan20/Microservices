@@ -1,11 +1,15 @@
 FROM confluentinc/cp-kafka:latest
 
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
 WORKDIR /etc/kafka
 
 USER root
 
-# Установим необходимые зависимости Python
-RUN pip install --no-cache-dir --upgrade requests kafka-python
+# Установим необходимые зависимости Python из файла requirements.txt
+COPY requirements.txt /etc/kafka/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /etc/kafka/requirements.txt
 
 # Копируем конфигурационный файл server.properties
 COPY config/server.properties /etc/kafka/server.properties
