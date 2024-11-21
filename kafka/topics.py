@@ -2,6 +2,7 @@
 from kafka import KafkaAdminClient
 from kafka.admin import NewTopic
 import time
+import socket
 
 
 topics_list = [
@@ -30,8 +31,27 @@ def create_topics(bootstrap_servers, topics):
         admin_client.close()
 
 
-if __name__ == "__main__":
-    time.sleep(10)
+def wait_for_kafka(bootstrap_servers, retries=30, delay=2):
+    """Функция для ожидания доступности Kafka"""
+    host, port = bootstrap_servers.split(":")
+    for _ in range(retries):
+        try:
+            sock = socket.create_connection((host, int(port)), timeout=1)
+            sock.close()
+            print(f"Kafka is up and running at {bootstrap_servers}")
+            return True
+        except (socket.timeout, socket.error):
+            print(f"Waiting for Kafka to be available at {bootstrap_servers}...")
+            time.sleep(delay)
+    return False
 
-    create_topics('kafka:9092', topics_list)
-    print("Topics created")
+
+if __name__ == "__main__":
+    kafka_address = 'microservices_kafka_1:9092'  # Используйте правильное имя сервиса или IP-адрес
+
+    # Ожидаем, пока Kafka не станет доступной
+    if wait_for_kafka(kafka_address):
+        create_topics(kafka_address, topics_list)
+        print("Topics created")
+    else:
+        print(f"Failed to connect to Kafka at {kafka_address}")
