@@ -9,20 +9,31 @@ services:
       - kafka-network
 
   kafka:
-    build:
-      context: ./kafka
+    image: wurstmeister/kafka:latest
+    container_name: kafka
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE_KAFKA:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL: PLAINTEXT
+      KAFKA_LISTENER_NAMES: INSIDE
+      KAFKA_LISTENER_HOSTNAME: INSIDE_KAFKA
+      KAFKA_LISTENER_PORT: 9092
+      KAFKA_LISTENER_INTERFACE: INSIDE_KAFKA
+      KAFKA_LISTENERS: INSIDE://INSIDE_KAFKA:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: 'false'
+      KAFKA_NUM_PARTITIONS: 3
     ports:
       - "9092:9092"
-    volumes:
-      - ./kafka/config:/etc/kafka/config
-      - kafka_data:/var/lib/kafka/data
-    environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
     depends_on:
       - zookeeper
+    volumes:
+      - /tmp/broker-metrics
+    expose:
+      - "9092"
     networks:
-      - kafka-network
+      - kafka-net
 
   create_topics:
     build:
