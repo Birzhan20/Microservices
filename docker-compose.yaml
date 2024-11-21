@@ -24,6 +24,16 @@ services:
     networks:
       - kafka-network
 
+  create_topics:
+    build:
+      context: ./create_topics
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
+
   translator:
     build:
       context: ./translator
