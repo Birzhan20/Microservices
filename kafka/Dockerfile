@@ -29,7 +29,15 @@ VOLUME ["/var/lib/kafka/data"]
 COPY topics.py /etc/kafka/topics.py
 
 # Устанавливаем утилиту для проверки порта (nc) и другие зависимости
-RUN yum -y install nc
+RUN yum -y install nc wget
+
+# Скачиваем и устанавливаем Kafka
+RUN wget https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz && \
+    tar -xvzf kafka_2.13-2.8.0.tgz && \
+    mv kafka_2.13-2.8.0 /opt/kafka
+
+# Добавляем утилиты Kafka в PATH
+ENV PATH="/opt/kafka/bin:${PATH}
 
 # Запускаем Kafka и затем Python-скрипт
 CMD ["sh", "-c", "/etc/confluent/docker/run && kafka-server-start /etc/kafka/server.properties & while ! nc -z localhost 9092; do sleep 1; done; python3 /etc/kafka/topics.py"]
