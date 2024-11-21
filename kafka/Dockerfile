@@ -37,7 +37,7 @@ RUN wget https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz && \
     mv kafka_2.13-2.8.0 /opt/kafka
 
 # Добавляем утилиты Kafka в PATH
-ENV PATH="/opt/kafka/bin:${PATH}
+ENV PATH="/opt/kafka/bin:${PATH}"
 
 # Запускаем Kafka и затем Python-скрипт
 CMD ["sh", "-c", "/etc/confluent/docker/run && kafka-server-start /etc/kafka/server.properties & while ! nc -z localhost 9092; do sleep 1; done; python3 /etc/kafka/topics.py"]
