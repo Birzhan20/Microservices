@@ -34,3 +34,4 @@ if __name__ == "__main__":
     time.sleep(10)
 
     create_topics('kafka:9092', topics_list)
+    print("Topics created")

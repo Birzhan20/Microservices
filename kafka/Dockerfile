@@ -1,4 +1,4 @@
-# Используем официальный базовый образ Red Hat UBI (Universal Base Image)
+# Используем официальный базовый образ Red Hat UBI с Python 3.9
 FROM registry.access.redhat.com/ubi8/python-39:latest
 
 # Устанавливаем переменные окружения для локали
@@ -31,17 +31,17 @@ COPY topics.py /etc/kafka/topics.py
 # Устанавливаем утилиту для проверки порта (nc) и другие зависимости
 RUN yum -y install nc wget
 
-# Устанавливаем OpenJDK (необходим для работы Kafka)
+# Устанавливаем OpenJDK 1.8 для Kafka
 RUN yum -y install java-1.8.0-openjdk
+
+# Настроим JAVA_HOME и обновим PATH
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Скачиваем и устанавливаем Kafka
 RUN wget https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz && \
     tar -xvzf kafka_2.13-2.8.0.tgz && \
     mv kafka_2.13-2.8.0 /opt/kafka
-
-# Настроим JAVA_HOME
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Добавляем утилиты Kafka в PATH
 ENV PATH="/opt/kafka/bin:${PATH}"
