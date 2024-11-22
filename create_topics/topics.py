@@ -47,7 +47,7 @@ def wait_for_kafka(bootstrap_servers, retries=30, delay=2):
 
 
 if __name__ == "__main__":
-    kafka_address = 'microservices_kafka_1:9092'  # Используйте правильное имя сервиса или IP-адрес
+    kafka_address = 'kafka:9092'  # Используйте правильное имя сервиса или IP-адрес
 
     # Ожидаем, пока Kafka не станет доступной
     if wait_for_kafka(kafka_address):
