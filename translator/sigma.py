@@ -1,11 +1,10 @@
-#-*- coding: utf-8 -*-
-import json
-import logging
-import uuid
-from logging.handlers import RotatingFileHandler
-import redis
+from fastapi import FastAPI
 from deep_translator import GoogleTranslator
-from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
+import uvicorn
+from fastapi.responses import JSONResponse, RedirectResponse
+from pydantic import BaseModel
+import logging
+from logging.handlers import RotatingFileHandler
 from langs import lang_mapping
 
 logging.basicConfig(
@@ -16,73 +15,34 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+
 langs = list(lang_mapping.keys())
 
-consumer_config = {
-    'bootstrap.servers': 'kafka:9092',
-    'group.id': 'translator',
-    'auto.offset.reset': 'earliest',
-    'enable.auto.commit': False,
-}
+app = FastAPI()
 
-producer_config = {
-    'bootstrap.servers': 'kafka:9092',
-    'acks': 'all',
-}
+  ### DATA MODEL ###
 
-# Redis client to store processed message IDs
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
-
-producer = Producer(producer_config)
-consumer = Consumer(consumer_config)
-
-consumer.subscribe(['translation'])
+class Request(BaseModel):
+    src_lang: str
+    input_text: str
 
 
-def delivery_report(err, msg):
-    if err:
-        logging.error(f"Delivery failed for message: {err}")
-    else:
-        logging.info(f"Message delivered to {msg.topic()} [{msg.partition()}] at offset {msg.offset()}")
+  ### API ###
+
+@app.get("/", include_in_schema=False)
+async def home():
+    return RedirectResponse("/docs")
 
 
-def send_translation_result(translations):
-    try:
-        result_message = {
-            'message_id': str(uuid.uuid4()),
-            'translations': translations,
-        }
-        producer.produce(
-            'translation-res',
-            value=json.dumps(result_message),
-            callback=delivery_report
-        )
-        producer.flush()  # Ensure message is sent before continuing
-        logging.info("Translation result sent to Kafka.")
-    except Exception as e:
-        logging.error(f"Failed to send translation result to Kafka: {e}")
-
-
-def process_translation_request(message):
-    message_id = message.get('message_id')
-
-    if not message_id:
-        logging.error("Message is missing a unique message_id, skipping.")
-        return
-
-    # Check if this message was already processed (idempotency)
-    if redis_client.get(message_id):
-        logging.info(f"Message {message_id} already processed. Skipping.")
-        return
-
-    src = message.get('src_lang')
-    text = message.get('input_text')
-
+@app.post("/translate", tags=["translate"])
+async def translate(request: Request):
+    logging.info(f"Got request: {request}\n")
+    src = request.src_lang
+    text = request.input_text
     google_src = lang_mapping.get(src)
 
     if not google_src:
-        logging.error(f"Unacceptable source language: {src}")
-        return
+        return JSONResponse(content={"error": "Unacceptable foreign language."}, status_code=400)
 
     translations = {}
 
@@ -94,43 +54,15 @@ def process_translation_request(message):
                 translations[tgt] = result
             except Exception as e:
                 logging.error(f"Error when translating into {google_tgt}: {e}")
-                translations[tgt] = "Translation error"
+                translations[tgt] = "Translating error"
 
-    send_translation_result(translations)
+    result_json = {
+        "translations": translations,
+    }
+    logging.debug(f"The translation has returned: {result_json}\n")
 
-    # Store in Redis to avoid reprocessing
-    try:
-        redis_client.set(message_id, "processed", ex=3600)  # Set an expiration of 1 hour
-        logging.info(f"Message {message_id} marked as processed.")
-    except Exception as e:
-        logging.error(f"Error storing message ID {message_id} in Redis: {e}")
-
-    # Commit offset only after processing and sending the result
-    consumer.commit()
-
-
-def run_kafka_consumer():
-    try:
-        while True:
-            msg = consumer.poll(timeout=1.0)
-            if msg is None:
-                continue
-            if msg.error():
-                if msg.error().code() == KafkaError._PARTITION_EOF:
-                    logging.info(f"End of partition reached: {msg.topic()} [{msg.partition()}] at offset {msg.offset()}")
-                else:
-                    raise KafkaException(msg.error())
-            else:
-                message = json.loads(msg.value().decode('utf-8'))
-                process_translation_request(message)
-    except KeyboardInterrupt:
-        logging.info("Kafka consumer interrupted by user.")
-    except Exception as e:
-        logging.error(f"Error during Kafka consumption: {e}")
-    finally:
-        consumer.close()
+    return JSONResponse(content=result_json)
 
 
 if __name__ == "__main__":
-    logging.info("Kafka consumer started")
-    run_kafka_consumer()
+    uvicorn.run(app, host="0.0.0.0", port=8000)

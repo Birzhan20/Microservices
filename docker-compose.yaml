@@ -1,14 +1,5 @@
 version: '3.8'
 services:
-  zookeeper:
-    container_name: zookeeper
-    image: confluentinc/cp-zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - kafka-network
-
   kafka:
     image: bitnami/kafka:latest
     container_name: kafka
@@ -19,13 +10,11 @@ services:
       - KAFKA_KRAFT_CLUSTER_ID=JAVELIN
       - KAFKA_CFG_PROCESS_ROLES=controller, broker
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9091
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091, EXTERNAL://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://KAFKA:9090, EXTERNAL://${HOSTNAME:-localhost}:9092
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://KAFKA:9090,EXTERNAL://${HOSTNAME:-localhost}:9092
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-    depends_on:
-      - zookeeper
     volumes:
       - kafka_data:/bitnami/kafka
     expose:
