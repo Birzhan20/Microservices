@@ -37,7 +37,7 @@ services:
       context: ./create_topics
     container_name: topics
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
@@ -48,7 +48,7 @@ services:
       context: ./translator
     container_name: translator
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
@@ -59,7 +59,7 @@ services:
       context: ./phys_jud
     container_name: phys_jud
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
@@ -70,7 +70,7 @@ services:
       context: ./goods_category
     container_name: goods_category
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
@@ -81,7 +81,7 @@ services:
       context: ./d_a_goods_categories
     container_name: d_a_goods_categories
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
@@ -92,7 +92,7 @@ services:
       context: ./d_g_goods_categories
     container_name: d_g_goods_categories
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
@@ -103,7 +103,7 @@ services:
       context: ./d_r_goods_categories
     container_name: d_r_goods_categories
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
@@ -114,7 +114,7 @@ services:
       context: ./d_s_services_categories
     container_name: d_s_services_categories
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
@@ -125,7 +125,7 @@ services:
       context: ./vacancy
     container_name: vacancy
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
       - kafka
     networks:
