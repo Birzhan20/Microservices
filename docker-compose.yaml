@@ -26,7 +26,7 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      - kafka_data:/var/lib/kafka/data/:/bitnami/kafka
+      - kafka_data:/bitnami/kafka
     expose:
       - "9092"
     networks:
