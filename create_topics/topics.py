@@ -31,7 +31,7 @@ def create_topics(bootstrap_servers, topics):
         admin_client.close()
 
 
-def wait_for_kafka(bootstrap_servers, retries=30, delay=2):
+def wait_for_kafka(bootstrap_servers, retries=30, delay=10):
     """Функция для ожидания доступности Kafka"""
     host, port = bootstrap_servers.split(":")
     for _ in range(retries):
