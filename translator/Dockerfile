@@ -13,4 +13,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "sleep 10 && python sigma.py"]
+CMD ["sh", "-c", "sleep 10 && python sigma1.py"]
