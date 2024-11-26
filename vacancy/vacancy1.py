@@ -10,14 +10,14 @@ import logging
 nest_asyncio.apply()
 
 consumer_config = {
-    'bootstrap.servers': 'kafka:9092',
+    'bootstrap.servers': 'kafka:9091',
     'group.id': 'vacancy',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
 }
 
 producer_config = {
-    'bootstrap.servers': 'kafka:9092',
+    'bootstrap.servers': 'kafka:9091',
     'acks': 'all',
 }
 
