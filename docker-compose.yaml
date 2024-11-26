@@ -22,7 +22,7 @@ services:
       - "9092"  # Для связи через EXTERNAL
       - "9091"  # Для внутренней связи
     networks:
-      - kafka
+      - kafka-network
 
   topics:
     build:
@@ -33,7 +33,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
   translator:
     build:
@@ -44,7 +44,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
   phys_jud:
     build:
@@ -55,7 +55,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
   goods_category:
     build:
@@ -66,7 +66,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
   d_a_goods_categories:
     build:
@@ -77,7 +77,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
   d_g_goods_categories:
     build:
@@ -88,7 +88,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
   d_r_goods_categories:
     build:
@@ -99,7 +99,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
   d_s_services_categories:
     build:
@@ -110,7 +110,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
   vacancy:
     build:
@@ -121,7 +121,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - kafka
+      - kafka-network
 
 networks:
   kafka-network:
