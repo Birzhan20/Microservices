@@ -4,23 +4,23 @@ services:
     image: bitnami/kafka:latest
     container_name: kafka
     ports:
-      - "9092:9092"  # Проброс внешнего порта
-      - "9091:9091"  # Проброс внутреннего порта
+      - "9092:9092"  # РџСЂРѕР±СЂРѕСЃ РІРЅРµС€РЅРµРіРѕ РїРѕСЂС‚Р°
+      - "9091:9091"  # РџСЂРѕР±СЂРѕСЃ РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ РїРѕСЂС‚Р°
     environment:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_KRAFT_CLUSTER_ID=JAVELIN
       - KAFKA_CFG_PROCESS_ROLES=controller, broker
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9091
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://kafka:9091,CONTROLLER://kafka:9091,EXTERNAL://0.0.0.0:9092  # Внутренний на 9091, внешний на 9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9091,EXTERNAL://${HOSTNAME:-localhost}:9092  # Внутренний и внешний адрес
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://kafka:9091,CONTROLLER://kafka:9091,EXTERNAL://0.0.0.0:9092  # Р’РЅСѓС‚СЂРµРЅРЅРёР№ РЅР° 9091, РІРЅРµС€РЅРёР№ РЅР° 9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9091,EXTERNAL://${HOSTNAME:-localhost}:9092  # Р’РЅСѓС‚СЂРµРЅРЅРёР№ Рё РІРЅРµС€РЅРёР№ Р°РґСЂРµСЃ
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
       - kafka_data:/bitnami/kafka
     expose:
-      - "9092"  # Для связи через EXTERNAL
-      - "9091"  # Для внутренней связи
+      - "9092"  # Р”Р»СЏ СЃРІСЏР·Рё С‡РµСЂРµР· EXTERNAL
+      - "9091"  # Р”Р»СЏ РІРЅСѓС‚СЂРµРЅРЅРµР№ СЃРІСЏР·Рё
     networks:
       - kafka
 
@@ -129,3 +129,4 @@ networks:
 
 volumes:
   kafka_data: {}
+
