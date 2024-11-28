@@ -11,14 +11,14 @@ nest_asyncio.apply()
 
 
 consumer_config = {
-    'bootstrap.servers': '0.0.0.0:9092',
+    'bootstrap.servers': 'kafka:9092',
     'group.id': 'd_r_goods_categories',
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': False,
 }
 
 producer_config = {
-    'bootstrap.servers': '0.0.0.0:9092',
+    'bootstrap.servers': 'kafka:9092',
     'acks': 'all',
 }
 

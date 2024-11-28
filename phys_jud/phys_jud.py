@@ -11,14 +11,14 @@ nest_asyncio.apply()
 
 
 consumer_config = {
-    'bootstrap.servers': '0.0.0.0:9092',
+    'bootstrap.servers': 'kafka:9092',
     'group.id': 'phys_jud',   # ID группы потребителей
     'auto.offset.reset': 'earliest',  # Начинать с самого начала
     'enable.auto.commit': False,  # Отключаем авто-коммит, чтобы вручную подтвердить обработку
 }
 
 producer_config = {
-    'bootstrap.servers': '0.0.0.0:9092',
+    'bootstrap.servers': 'kafka:9092',
     'acks': 'all',  # Ждем подтверждения от всех брокеров
 }
 
