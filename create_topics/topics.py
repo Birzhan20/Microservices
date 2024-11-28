@@ -1,4 +1,7 @@
 from kafka.admin import KafkaAdminClient, NewTopic
+import time
+
+time.sleep(60)
 
 # Инициализация клиента администратора Kafka
 admin_client = KafkaAdminClient(
