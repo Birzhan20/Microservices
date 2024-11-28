@@ -2,7 +2,7 @@ from kafka.admin import KafkaAdminClient, NewTopic
 
 # Инициализация клиента администратора Kafka
 admin_client = KafkaAdminClient(
-    bootstrap_servers="0.0.0.0:9092",  # Используйте внешний адрес, если скрипт не внутри контейнера
+    bootstrap_servers="localhost:9092",  # Используйте внешний адрес, если скрипт не внутри контейнера
     client_id='admin-client'  # Пример уникального идентификатора клиента
 )
 
