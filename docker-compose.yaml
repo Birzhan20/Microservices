@@ -4,128 +4,103 @@ services:
     image: bitnami/kafka:latest
     container_name: kafka
     ports:
-      - "9092:9092"  # Проброс внешнего порта
-      - "9091:9091"  # Проброс внутреннего порта
+      - "9092:9092"
     environment:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_KRAFT_CLUSTER_ID=JAVELIN
       - KAFKA_CFG_PROCESS_ROLES=controller, broker
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9090
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://kafka:9091,CONTROLLER://:9090,EXTERNAL://0.0.0.0:9092  # Внутренний на 9091, внешний на 9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9091,EXTERNAL://${HOSTNAME:-localhost}:9092  # Внутренний и внешний адрес
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://KAFKA:9090,EXTERNAL://0.0.0.0:9092
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
       - kafka_data:/bitnami/kafka
     expose:
-      - "9092"  # Для связи через EXTERNAL
-      - "9091"  # Для внутренней связи
-    networks:
-      - kafka-network
+      - "9092"
+
 
   topics:
     build:
       context: ./create_topics
     container_name: topics
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
 
   translator:
     build:
       context: ./translator
     container_name: translator
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
 
   phys_jud:
     build:
       context: ./phys_jud
     container_name: phys_jud
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
 
   goods_category:
     build:
       context: ./goods_category
     container_name: goods_category
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
 
   d_a_goods_categories:
     build:
       context: ./d_a_goods_categories
     container_name: d_a_goods_categories
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
 
   d_g_goods_categories:
     build:
       context: ./d_g_goods_categories
     container_name: d_g_goods_categories
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
 
   d_r_goods_categories:
     build:
       context: ./d_r_goods_categories
     container_name: d_r_goods_categories
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
 
   d_s_services_categories:
     build:
       context: ./d_s_services_categories
     container_name: d_s_services_categories
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
 
   vacancy:
     build:
       context: ./vacancy
     container_name: vacancy
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9091
+      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
     depends_on:
       - kafka
-    networks:
-      - kafka-network
-
-networks:
-  kafka-network:
-    driver: bridge
 
 volumes:
   kafka_data: {}
