@@ -15,22 +15,11 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CREATE_TOPICS=category-index:1:1,category-seo:1:1,goods-category-result:1:1,goods-index:1:1,goods-seo:1:1,d-a-categories-index:1:1,d-a-categories-seo:1:1,d-a-goods-index:1:1,d-a-goods-seo:1:1,d-a-result:1:1,d-g-categories-index:1:1,d-g-categories-seo:1:1,d-g-goods-index:1:1,d-g-goods-seo:1:1,d-g-result:1:1,d-r-categories-index:1:1,d-r-categories-seo:1:1,d-r-goods-index:1:1,d-r-goods-seo:1:1,d-r-result:1:1,d-s-categories-index:1:1,d-s-categories-seo:1:1,d-s-result:1:1,d-s-services-index:1:1,d-s-services-seo:1:1,jud-index:1:1,jud-seo:1:1,phys-index:1:1,phys-jud-result:1:1,phys-seo:1:1,vacancy-index:1:1,vacancy-seo:1:1,vacancy-resume-index:1:1,vacancy-resume-seo:1:1,vacancy-result:1:1,translation:1:1,translation-res:1:1
     volumes:
       - kafka_data:/bitnami/kafka
     expose:
       - "9092"
-    networks:
-      - kafka-network
-
-
-  topics:
-    build:
-      context: ./create_topics
-    container_name: topics
-    environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    depends_on:
-      - kafka
     networks:
       - kafka-network
 
