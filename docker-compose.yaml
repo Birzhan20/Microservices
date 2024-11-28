@@ -26,7 +26,7 @@ services:
       context: ./create_topics
     container_name: topics
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=0.0.0.0:9092
+      - KAFKA_BOOTSTRAP_SERVERS=localhost:9092
     depends_on:
       - kafka
 
