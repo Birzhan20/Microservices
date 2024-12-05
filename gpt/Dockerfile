@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 ADD . .
 
-EXPOSE 8000
+EXPOSE 8010
 
-CMD ["uvicorn", "gpt:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
+CMD ["uvicorn", "gpt:app", "--host", "0.0.0.0", "--port", "8010", "--proxy-headers"]
