@@ -13,4 +13,4 @@ ADD . .
 
 EXPOSE 8010
 
-CMD ["uvicorn", "gpt:app", "--host", "0.0.0.0", "--port", "8010", "--proxy-headers"]
+CMD ["uvicorn", "NLP:app", "--host", "0.0.0.0", "--port", "8010", "--proxy-headers"]
