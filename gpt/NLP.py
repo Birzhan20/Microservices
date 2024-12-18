@@ -7,11 +7,11 @@ from functools import lru_cache
 
 app = FastAPI()
 
-model_name = "OpenAssistant/oasst-sft-4-pythia-12b-epoch-3.5"
+model_name = "ai-forever/rugpt3small_based_on_gpt2"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
-    device_map="cpu",
+    device_map="auto",
     torch_dtype=torch.float16
 )
 
@@ -28,7 +28,8 @@ def generate_text(prompt):
         inputs.input_ids,
         temperature=0.7,
         top_p=0.9,
-        num_beams=1,
+        num_beams=2,
+        attention_mask=inputs.attention_mask,
         do_sample=True,
         early_stopping=True,
     )
