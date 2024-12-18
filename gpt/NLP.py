@@ -296,4 +296,4 @@ async def generate_meta_description(request_body: Txt):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app,workers=4)
+    uvicorn.run(app)
