@@ -57,7 +57,6 @@ def get_full_system_info():
                     for iface, io in psutil.net_io_counters(pernic=True).items()
                 },
             },
-            "battery": psutil.sensors_battery()._asdict() if psutil.sensors_battery() else "No battery detected",
             "sensors": temperature_info,
         },
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
