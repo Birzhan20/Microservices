@@ -7,7 +7,7 @@ from functools import lru_cache
 
 app = FastAPI()
 
-model_path = "./ai"
+model_path = "./ai/rugpt3small_based_on_gpt2"
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
