@@ -13,4 +13,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "sleep 30 && python sigma.py"]
+CMD ["sh", "-c", "python animus.py"]
