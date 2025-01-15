@@ -4,9 +4,9 @@ services:
     build:
       context: ./test
     image: sender
-    container_name: sender
+    container_name: senser
     ports:
-      - 5001:5000
+      - 5000:5000
 
   getter:
     build:
@@ -14,4 +14,4 @@ services:
     image: getter
     container_name: getter
     ports:
-      - 6001:6000
+      - 6000:6000
