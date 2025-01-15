@@ -9,7 +9,7 @@ class Message(BaseModel):
     msg: str
 
 producer_config = {
-    "bootstrap.servers": "localhost:9092"
+    "bootstrap.servers": "0.0.0.0:9092"
 }
 
 producer = Producer(producer_config)
