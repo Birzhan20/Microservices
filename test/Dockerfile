@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 ADD . .
 
-EXPOSE 5000
+EXPOSE 6001
 
 CMD ["python3", "test.py"]
