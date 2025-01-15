@@ -1,5 +1,11 @@
 version: '3.8'
 services:
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: kafka
+    ports:
+      - 9092:9092
+
   sender:
     build:
       context: ./test
