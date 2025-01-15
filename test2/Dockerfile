@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 ADD . .
 
-EXPOSE 8000
+EXPOSE 6000
 
-CMD ["sh", "-c", "sleep 30 && python d_r_goods_categories1.py"]
+CMD ["python3", "test2.py"]

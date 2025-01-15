@@ -3,14 +3,32 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
+from fastapi.middleware.cors import CORSMiddleware
 from app_create import create_app
 
 load_dotenv()
 
 # Инициализация клиента OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
 app = create_app(create_custom_static_urls=True)
+
+
+origins = [
+    *[f"http://172.20.10.{i}" for i in range(1, 256)],
+    *[f"https://172.20.10.{i}" for i in range(1, 256)],
+    *[f"https://192.168.0.{i}" for i in range(1, 256)],
+    *[f"http://192.168.0.{i}" for i in range(1, 256)],
+    "http://localhost",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # Модель запроса
 class Txt(BaseModel):

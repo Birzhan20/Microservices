@@ -1,16 +1,32 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
-
 from deep_translator import GoogleTranslator
 import uvicorn
 from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+
 from langs import lang_mapping
 from app_create import create_app
 
 langs = list(lang_mapping.keys())
 app = create_app(create_custom_static_urls=True)
 
+origins = [
+    *[f"http://172.20.10.{i}" for i in range(1, 256)],
+    *[f"https://172.20.10.{i}" for i in range(1, 256)],
+    *[f"https://192.168.0.{i}" for i in range(1, 256)],
+    *[f"http://192.168.0.{i}" for i in range(1, 256)],
+    "http://localhost",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 ### DATA MODEL ###
 class Request(BaseModel):
